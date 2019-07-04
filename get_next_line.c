@@ -6,7 +6,7 @@
 /*   By: lkebethi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/30 11:48:10 by lkebethi          #+#    #+#             */
-/*   Updated: 2019/06/30 14:47:45 by lkebethi         ###   ########.fr       */
+/*   Updated: 2019/07/04 16:25:22 by lkebethi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ int			new_line(char **s, char **line, int fd, int ret)
 		*line = ft_strsub(s[fd], 0, len);
 		tmp = ft_strdup(s[fd] + len + 1);
 		free(s[fd]);
+		s[fd] = tmp;
 		if (s[fd][0] == '\0')
 			ft_strdel(&s[fd]);
 	}
@@ -40,9 +41,8 @@ int			new_line(char **s, char **line, int fd, int ret)
 
 int			get_next_line(const int fd, char **line)
 {
-	static char	*s[255];
+	static char	*s[2500];
 	char		buf[BUFF_SIZE + 1];
-	char		*tmp;
 	int			ret;
 
 	if (fd < 0 || line == NULL)
@@ -51,11 +51,9 @@ int			get_next_line(const int fd, char **line)
 	{
 		buf[ret] = '\0';
 		if (s[fd] == NULL)
-			s[fd] = ft_strnew(1);
-		tmp = ft_strjoin(s[fd], buf);
-		free(s[fd]);
-		s[fd] = tmp;
-		if (ft_strchr(buf, '\n'))
+			s[fd] = ft_strnew(0);
+		s[fd] = ft_jointostr(s[fd], buf);
+		if (ft_strchr(s[fd], '\n'))
 			break ;
 	}
 	if (ret < 0)
